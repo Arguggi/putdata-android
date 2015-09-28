@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">putdata</string>
+    <string name="getCopiedString">String copied to clipboard</string>
+    <string name="getDeletingString">Deleting string</string>
+    <string name="getStringDeleted">String deleted</string>
+    <string name="getErrorDeletingString">Error while deleting string</string>
+    <string name="putClipboardString">Clipboard</string>
+    <string name="putSendString">Save on server</string>
+    <string name="putRefreshString">Refresh</string>
+    <string name="putPostSuccess">String saved</string>
+    <string name="putPostError">Failed to save string</string>
+</resources>
