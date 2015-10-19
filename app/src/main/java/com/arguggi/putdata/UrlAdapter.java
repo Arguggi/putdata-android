@@ -45,7 +45,6 @@ public class UrlAdapter extends BaseAdapter {
 
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.url_row, parent, false);
-            holder.urlId = (TextView) convertView.findViewById(R.id.url_row_url_id);
             holder.urlText = (TextView) convertView.findViewById(R.id.url_row_url_text);
             convertView.setTag(holder);
         } else {
@@ -53,12 +52,10 @@ public class UrlAdapter extends BaseAdapter {
         }
 
         holder.urlText.setText(mUrl.url);
-        holder.urlId.setText(Integer.toString(mUrl.id));
         return convertView;
     }
 
     static class ViewHolderCategory {
         public TextView urlText;
-        public TextView urlId;
     }
 }
