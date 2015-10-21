@@ -59,8 +59,8 @@ public class GetFragment extends Fragment {
         list.setOnItemLongClickListener(new OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-                String urlString = urls.get(position).url;
-                deleteString(urlString);
+                String urlHash = urls.get(position).hash;
+                deleteString(urlHash);
                 return true;
             }
         });
@@ -96,6 +96,7 @@ public class GetFragment extends Fragment {
                     for (int i = 0; i < response.length(); i++) {
                         JSONObject oUrl = response.getJSONObject(i);
                         App.Url appUrl = new App.Url();
+                        appUrl.hash = oUrl.getString("hash");
                         appUrl.url = oUrl.getString("url");
                         urls.add(appUrl);
                     }
@@ -112,10 +113,10 @@ public class GetFragment extends Fragment {
         queue.add(jsArrRequest);
     }
 
-    public void deleteString(String urlString) {
+    public void deleteString(String urlHash) {
 
         Toast.makeText(getActivity(), R.string.getDeletingString, Toast.LENGTH_SHORT).show();
-        final String DELETEURL = "https://putdata.arguggi.co.uk/url/" + urlString;
+        final String DELETEURL = "https://putdata.arguggi.co.uk/url/" + urlHash;
         RequestQueue queue = Volley.newRequestQueue(getActivity());
         StringRequest mStringRequest = new StringRequest(Request.Method.DELETE, DELETEURL, new Response.Listener<String>() {
             @Override

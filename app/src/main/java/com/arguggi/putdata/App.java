@@ -5,6 +5,7 @@ import android.app.Application;
 public class App extends Application {
 
     static class Url {
+        public String hash;
         public String url;
     }
 }
