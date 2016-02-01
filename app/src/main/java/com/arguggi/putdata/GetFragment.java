@@ -1,11 +1,5 @@
 package com.arguggi.putdata;
 
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Fragment;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -25,9 +19,15 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class GetFragment extends Fragment {
 
@@ -38,7 +38,7 @@ public class GetFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate( R.layout.fragment_get, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_get, container, false);
 
         ListView list = (ListView) rootView.findViewById(R.id.main_url_listview);
         mListAdapter = new UrlAdapter(getActivity(), urls);
@@ -66,7 +66,6 @@ public class GetFragment extends Fragment {
         });
 
 
-
         // Update ListView on swipe
         final SwipeRefreshLayout swipeView = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         swipeView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -88,13 +87,18 @@ public class GetFragment extends Fragment {
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-        JsonArrayRequest jsArrRequest = new JsonArrayRequest(Request.Method.GET, URL, "", new Response.Listener<JSONArray>() {
+        JsonObjectRequest jsArrRequest = new JsonObjectRequest(Request.Method.GET, URL, "", new Response.Listener<JSONObject>() {
 
             @Override
-            public void onResponse(JSONArray response) {
+            public void onResponse(JSONObject response) {
                 try {
-                    for (int i = 0; i < response.length(); i++) {
-                        JSONObject oUrl = response.getJSONObject(i);
+                    if (response.getInt("respCode") == 1) {
+                        return;
+                    }
+                    JSONArray data = response.getJSONArray("urls");
+
+                    for (int i = 0; i < data.length(); i++) {
+                        JSONObject oUrl = data.getJSONObject(i);
                         App.Url appUrl = new App.Url();
                         appUrl.hash = oUrl.getString("hash");
                         appUrl.url = oUrl.getString("url");
@@ -104,12 +108,13 @@ public class GetFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }}, new Response.ErrorListener() {
+            }
+        }, new Response.ErrorListener() {
 
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                }
-            });
+            @Override
+            public void onErrorResponse(VolleyError error) {
+            }
+        });
         queue.add(jsArrRequest);
     }
 
